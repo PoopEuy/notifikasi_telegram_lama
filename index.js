@@ -40,7 +40,6 @@ app.listen(PORT, async function () {
     setTimeout(
       await function () {
         cron_filter();
-        // getSiteDown();
       },
       500
     );
@@ -72,9 +71,15 @@ bot.command("sitedown", (ctx) => {
 async function cron_filter() {
   console.log("masuk cron ilter");
   // 00, 10, 20, 30, 40, 50;
-  cron.schedule("* 00,10,20,30,40,50 * * * *", () => {
+  // await cron.schedule("* 09 * * * *", () => {
+  //   date_ob = new Date();
+  //   console.log("running a task ");
+  //   // getSiteDown();
+  // });
+
+  await cron.schedule("00 00,10,20,30,40,50 * * * *", () => {
     date_ob = new Date();
-    console.log("running a task ");
+    console.log("running a task pada setiap jam 0,6,12,18");
     getSiteDown();
   });
 }

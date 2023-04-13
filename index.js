@@ -18,7 +18,9 @@ let waktu;
 let d;
 let h;
 let m;
-
+let first_message = true;
+let modulus;
+let chat_terkirim = 0;
 console.log("token_bot : " + token_bot);
 
 //env use
@@ -69,19 +71,14 @@ bot.command("sitedown", (ctx) => {
 });
 
 async function cron_filter() {
-  console.log("masuk cron ilter");
-  // 00, 10, 20, 30, 40, 50;
-  // await cron.schedule("* 09 * * * *", () => {
+  console.log("masuk cron filter");
+  // 00 00,10,20,30,40,50 * * * *
+  // await cron.schedule("00 00,10,20,30,40,50 * * * *", () => {
   //   date_ob = new Date();
   //   console.log("running a task ");
-  //   // getSiteDown();
+  //   getSiteDown();
   // });
-
-  await cron.schedule("00 00,10,20,30,40,50 * * * *", () => {
-    date_ob = new Date();
-    console.log("running a task pada setiap jam 0,6,12,18");
-    getSiteDown();
-  });
+  getSiteDown();
 }
 
 async function getRealtime() {
@@ -101,7 +98,7 @@ async function getRealtime() {
     // console.log("recived batt_volt: " + batt_volt);
     for (let i = 0; i < array.length; i++) {
       const site_name = await array[i].site_name;
-      const site_message = await array[i].message;
+      const site_down_reason = await array[i].down_reason;
       const site_downtime = await array[i].downtime;
       const site_downdate = await array[i].created_at;
 
@@ -114,11 +111,10 @@ async function getRealtime() {
           },
           5000
         );
-      } else {
       }
     }
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     console.log("error");
   }
 }
@@ -131,6 +127,8 @@ async function getSiteDown() {
     const arr = await res.data;
 
     const total_down = arr.length;
+    modulus = total_down % 20;
+    console.log("modulus = " + modulus);
     const array = await res.data;
 
     console.log("total_down data  : " + total_down);
@@ -138,16 +136,18 @@ async function getSiteDown() {
     if (total_down > 0) {
       for (let i = 0; i < array.length; i++) {
         const site_name = await array[i].site_name;
-        const site_message = await array[i].message;
+        const site_down_reason = await array[i].down_reason;
         const site_downtime = await array[i].downtime;
         const site_downdate = await array[i].created_at;
 
+        console.log("site_name : " + site_name);
+        console.log("site_down_reason : " + site_down_reason);
         ConvertMinutes(
           site_name,
           total_down,
           site_downtime,
           site_downdate,
-          site_message
+          site_down_reason
         );
       }
     } else {
@@ -179,7 +179,7 @@ async function ConvertMinutes(
   total_down,
   site_downtime,
   site_downdate,
-  site_message
+  site_down_reason
 ) {
   d = Math.floor(site_downtime / 1440); // 60*24
   h = Math.floor((site_downtime - d * 1440) / 60);
@@ -192,12 +192,12 @@ async function ConvertMinutes(
     // return d + " days, " + h + " hours, " + m + " minutes";
     waktu = d + " days, " + h + " hours, " + m + " minutes";
     console.log("site : " + site_name + ", waktu : " + waktu);
-    autoChat(site_name, total_down, waktu, site_downdate, site_message);
+    autoChat(site_name, total_down, waktu, site_downdate, site_down_reason);
   } else {
     // return h + " hours, " + m + " minutes";
     waktu = h + " hours, " + m + " minutes";
     console.log("site : " + site_name + ", waktu : " + waktu);
-    autoChat(site_name, total_down, waktu, site_downdate, site_message);
+    autoChat(site_name, total_down, waktu, site_downdate, site_down_reason);
   }
 }
 
@@ -206,14 +206,15 @@ const autoChat = async (
   total_down,
   waktu,
   site_downdate,
-  site_message
+  site_down_reason
 ) => {
   const msg_siteName = site_name;
   const msg_totalDown = total_down;
   const msg_downDuration = waktu;
   const tanggal_down = new Date(site_downdate);
   const msg_downDate = tanggal_down;
-  const string = `<b>ALERT!!! SITE DOWN!!!</b> \n Site Name : ${msg_siteName} \n Down Date : ${msg_downDate} \n Down Duration : ${msg_downDuration} Min \n Reason : ${site_message} \n\n`;
+  // const string = `<b>ALERT!!! SITE DOWN!!!</b> \n Site Name : ${msg_siteName} \n Down Date : ${msg_downDate} \n Down Duration : ${msg_downDuration} Min \n Reason : ${site_down_reason} \n\n`;
+  const string = `<b>ALERT!!! APT BARU SITE DOWN!!!</b> \n Site Name : ${msg_siteName} \n Down Duration : ${msg_downDuration} \n Down Date : ${msg_downDate} \n Reason : ${site_down_reason} \n\n`;
   // console.log("message = " + message);
 
   array_message.push(string);
@@ -224,24 +225,51 @@ const autoChat = async (
   const array_str = join_arr.toString();
   const message = array_str;
   const message_total = `TOTAL SITE DOWM : ${total_down} `;
+  console.log("LEN : " + message.length);
+  console.log("total_chat : " + total_chat);
 
-  if (total_chat == total_down) {
-    bot.telegram.sendMessage(CHAT_ID, message, { parse_mode: "HTML" });
+  if (first_message === true && total_chat === modulus) {
+    console.log("kirim modulus chat : " + total_chat);
+    chat_terkirim = chat_terkirim + total_chat;
+    first_message = false;
+    array_message = [];
+    total_chat = array_message.length;
+    chat_terkirim = chat_terkirim + total_chat;
+    console.log("chat terkirim : " + chat_terkirim);
     setTimeout(
       await function () {
         bot.telegram.sendMessage(CHAT_ID, message_total, {
           parse_mode: "HTML",
         });
       },
-      1500
+      5000
     );
+    bot.telegram.sendMessage(CHAT_ID, message, { parse_mode: "HTML" });
+  } else if (total_chat === 20) {
+    bot.telegram.sendMessage(CHAT_ID, message, { parse_mode: "HTML" });
+    chat_terkirim = chat_terkirim + total_chat;
+    // setTimeout(
+    //   await function () {
+    //     bot.telegram.sendMessage(CHAT_ID, message_total, {
+    //       parse_mode: "HTML",
+    //     });
+    //   },
+    //   1500
+    // );
 
     console.log("KIRIM CHAT!!! : ");
     array_message = [];
     console.log("ARRAY CLEAR : " + array_message);
     total_chat = array_message.length;
     console.log("ARRAY CLEAR rANGE: " + total_chat);
+
+    console.log("chat terkirim : " + chat_terkirim);
+
+    if (total_down === chat_terkirim) {
+      chat_terkirim = 0;
+      first_message = true;
+    }
   } else {
-    console.log("TIDAK KIRIM CHAT!!! " + site_name);
+    // console.log("TIDAK KIRIM CHAT!!! " + site_name);
   }
 };

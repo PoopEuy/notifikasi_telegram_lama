@@ -5,7 +5,7 @@ import moment from "moment";
 const op = Sequelize.Op;
 
 // Get semua product
-export const getRealtime = async (req, res) => {
+export const getRealtimeLama = async (req, res) => {
   try {
     const response = await Realtime.findAll();
     res.send(response);
@@ -15,7 +15,7 @@ export const getRealtime = async (req, res) => {
   }
 };
 
-export const getSiteDown = async (req, res) => {
+export const getSiteDownLama = async (req, res) => {
   try {
     //konfigurasi awal
     // const response = await Realtime.findAll({

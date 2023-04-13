@@ -1,58 +1,49 @@
 import { Sequelize } from "sequelize";
 // import connection
-import db from "../config/database.js";
+import db from "../config/databaseLama.js";
 
 // init DataTypes
 const { DataTypes } = Sequelize;
 
 // Define schema
 const Realtime = db.define(
-  "realtime",
+  "realtime2",
   {
     // Define attributes
     site_name: {
       type: DataTypes.STRING,
     },
-    batt_volt: {
-      type: DataTypes.INTEGER,
-    },
-    down_reason: {
-      type: DataTypes.STRING,
-    },
-    load1: {
+    pv1_voltage: {
       type: DataTypes.FLOAT,
     },
-    load2: {
+    pv2_voltage: {
       type: DataTypes.FLOAT,
     },
-    load3: {
+    pv1_current: {
       type: DataTypes.FLOAT,
     },
-    pv1_curr: {
+    pv2_current: {
       type: DataTypes.FLOAT,
     },
-    pv2_curr: {
+    batt1_voltage: {
       type: DataTypes.FLOAT,
     },
-    pv3_curr: {
+    batt2_voltage: {
       type: DataTypes.FLOAT,
     },
-    pv1_volt: {
+    lvd1_voltage: {
       type: DataTypes.FLOAT,
     },
-    pv2_volt: {
+    lvd2_voltage: {
       type: DataTypes.FLOAT,
     },
-    pv3_volt: {
+    lvd1_current: {
       type: DataTypes.FLOAT,
     },
-    ping: {
-      type: DataTypes.INTEGER,
+    lvd2_current: {
+      type: DataTypes.FLOAT,
     },
-    total_pack: {
-      type: DataTypes.INTEGER,
-    },
-    site_host: {
+    host_site: {
       type: DataTypes.STRING,
     },
     message: {

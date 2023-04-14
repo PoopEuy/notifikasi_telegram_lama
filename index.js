@@ -73,11 +73,11 @@ bot.command("sitedown", (ctx) => {
 async function cron_filter() {
   console.log("masuk cron filter");
   // 00 00,10,20,30,40,50 * * * *
-  // await cron.schedule("00 00,10,20,30,40,50 * * * *", () => {
-  //   date_ob = new Date();
-  //   console.log("running a task ");
-  //   getSiteDown();
-  // });
+  await cron.schedule("00 00,10,20,30,40,50 * * * *", () => {
+    date_ob = new Date();
+    console.log("running a task ");
+    getSiteDown();
+  });
   getSiteDown();
 }
 
@@ -154,8 +154,8 @@ async function getSiteDown() {
       console.log("TIDAK ADA SERVER DOWN");
     }
   } catch (error) {
-    console.error(error);
-    console.log("error");
+    // console.error(error);
+    console.log("error nih");
   }
 }
 
@@ -244,6 +244,12 @@ const autoChat = async (
       },
       5000
     );
+
+    if (total_down === modulus) {
+      first_message = true;
+      chat_terkirim = 0;
+    }
+
     bot.telegram.sendMessage(CHAT_ID, message, { parse_mode: "HTML" });
   } else if (total_chat === 20) {
     bot.telegram.sendMessage(CHAT_ID, message, { parse_mode: "HTML" });

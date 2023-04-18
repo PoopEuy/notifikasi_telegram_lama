@@ -20,7 +20,7 @@ services:
     build: .
     env_file:
       - ./.env
-    restart: unless-stopped
+    restart: always
     ports:
       - $PORT:$PORT
     depends_on:

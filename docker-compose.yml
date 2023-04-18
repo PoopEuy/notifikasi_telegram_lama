@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  db-tele-apt1old:
+    image: mysql:5.7
+    container_name: db-tele-apt1old
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    volumes:
+      - db-tele-apt1old-data:/var/lib/mysql
+    ports:
+      - $DB_PORT_EXPOSE_APT_BARU:3306
+    networks:
+      - db-tele-apt1old-network
+
+  bot-tele-apt1old:
+    image: bot-telegram-apt1old
+    container_name: bot-tele-apt1old
+    build: .
+    env_file:
+      - ./.env
+    restart: unless-stopped
+    ports:
+      - $PORT:$PORT
+    depends_on:
+      - db-tele-apt1old
+
+networks:
+  db-tele-apt1old-network:
+
+volumes:
+  db-tele-apt1old-data:

@@ -87,7 +87,7 @@ async function getRealtime() {
   try {
     let total_down = 0;
 
-    const res = await axios.get(`http://localhost:3001/getRealtimeLama`);
+    const res = await axios.get(`http://localhost:${PORT}/getRealtimeLama`);
     const arr = await res.data;
 
     const batt_volt = await res.data[0].batt_volt;
@@ -123,7 +123,7 @@ async function getSiteDown() {
   console.log("masuk fungsi");
 
   try {
-    const res = await axios.get(`http://localhost:3002/getSiteDownLama`);
+    const res = await axios.get(`http://localhost:${PORT}/getSiteDownLama`);
     const arr = await res.data;
 
     const total_down = arr.length;

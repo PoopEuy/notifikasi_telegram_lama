@@ -6,8 +6,8 @@ import db from "../config/databaseLama.js";
 const { DataTypes } = Sequelize;
 
 // Define schema
-const Realtime = db.define(
-  "realtime2",
+const RealtimeLama = db.define(
+  "realtime",
   {
     // Define attributes
     site_name: {
@@ -52,6 +52,9 @@ const Realtime = db.define(
     downtime: {
       type: DataTypes.INTEGER,
     },
+    down_reason: {
+      type: DataTypes.STRING,
+    },
     created_at: {
       type: "TIMESTAMP",
       defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
@@ -68,7 +71,7 @@ const Realtime = db.define(
 );
 
 // Export model Realtime
-export default Realtime;
+export default RealtimeLama;
 
 // (async () => {
 //   await db.sync();

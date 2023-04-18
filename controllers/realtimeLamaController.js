@@ -1,5 +1,5 @@
 // Import model Product
-import Realtime from "../models/Realtime.js";
+import RealtimeLama from "../models/RealtimeLama.js";
 import { Sequelize } from "sequelize";
 import moment from "moment";
 const op = Sequelize.Op;
@@ -7,7 +7,7 @@ const op = Sequelize.Op;
 // Get semua product
 export const getRealtimeLama = async (req, res) => {
   try {
-    const response = await Realtime.findAll();
+    const response = await RealtimeLama.findAll();
     res.send(response);
     // res.status(200).json({ msg: "sucess", data: response });
   } catch (err) {
@@ -41,7 +41,7 @@ export const getSiteDownLama = async (req, res) => {
     // // 9:40 am on March 13, 2022
     // console.log(date_now);
     // console.log(date_end); // 2022-05-18T14:10:00.000Z
-    const response = await Realtime.findAll({
+    const response = await RealtimeLama.findAll({
       where: {
         // created_at: {
         //   [op.between]: [date_start, date_end],
@@ -50,7 +50,7 @@ export const getSiteDownLama = async (req, res) => {
         //   [op.gt]: [10],
         // },
         downtime: {
-          [op.between]: [10, 420],
+          [op.between]: [10, 10080],
         },
       },
     });

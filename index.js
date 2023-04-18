@@ -57,16 +57,16 @@ app.listen(PORT, async function () {
 
 bot.launch();
 
-bot.command("start", (ctx) => {
+bot.command("helplama", (ctx) => {
   console.log(ctx.from);
   bot.telegram.sendMessage(
     ctx.chat.id,
-    "Hello there! Welcome to the Code Capsules telegram bot.\nI respond to /ethereum. Please try it",
+    "berikut beberapa command dalam bot aptlama :.\n - sitedown /sitedownlama ",
     {}
   );
 });
 
-bot.command("sitedown", (ctx) => {
+bot.command("sitedownlama", (ctx) => {
   getSiteDown();
 });
 
@@ -78,7 +78,7 @@ async function cron_filter() {
     console.log("running a task ");
     getSiteDown();
   });
-  getSiteDown();
+  // getSiteDown();
 }
 
 async function getRealtime() {
@@ -87,7 +87,7 @@ async function getRealtime() {
   try {
     let total_down = 0;
 
-    const res = await axios.get(`http://localhost:3001/getRealtime`);
+    const res = await axios.get(`http://localhost:3001/getRealtimeLama`);
     const arr = await res.data;
 
     const batt_volt = await res.data[0].batt_volt;
@@ -123,7 +123,7 @@ async function getSiteDown() {
   console.log("masuk fungsi");
 
   try {
-    const res = await axios.get(`http://localhost:3001/getSiteDown`);
+    const res = await axios.get(`http://localhost:3002/getSiteDownLama`);
     const arr = await res.data;
 
     const total_down = arr.length;
@@ -154,7 +154,7 @@ async function getSiteDown() {
       console.log("TIDAK ADA SERVER DOWN");
     }
   } catch (error) {
-    // console.error(error);
+    console.error(error);
     console.log("error nih");
   }
 }
@@ -214,7 +214,7 @@ const autoChat = async (
   const tanggal_down = new Date(site_downdate);
   const msg_downDate = tanggal_down;
   // const string = `<b>ALERT!!! SITE DOWN!!!</b> \n Site Name : ${msg_siteName} \n Down Date : ${msg_downDate} \n Down Duration : ${msg_downDuration} Min \n Reason : ${site_down_reason} \n\n`;
-  const string = `<b>ALERT!!! APT BARU SITE DOWN!!!</b> \n Site Name : ${msg_siteName} \n Down Duration : ${msg_downDuration} \n Down Date : ${msg_downDate} \n Reason : ${site_down_reason} \n\n`;
+  const string = `<b>ALERT!!! APT LAMA SITE DOWN!!!</b> \n Site Name : ${msg_siteName} \n Down Duration : ${msg_downDuration} \n Down Date : ${msg_downDate} \n Reason : ${site_down_reason} \n\n`;
   // console.log("message = " + message);
 
   array_message.push(string);
@@ -224,7 +224,7 @@ const autoChat = async (
   const join_arr = array_message.join("");
   const array_str = join_arr.toString();
   const message = array_str;
-  const message_total = `TOTAL SITE DOWM : ${total_down} `;
+  const message_total = `TOTAL SITE DOWN APT LAMA : ${total_down} `;
   console.log("LEN : " + message.length);
   console.log("total_chat : " + total_chat);
 

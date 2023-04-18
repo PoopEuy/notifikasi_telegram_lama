@@ -50,7 +50,7 @@ export const getSiteDown = async (req, res) => {
         //   [op.gt]: [10],
         // },
         downtime: {
-          [op.between]: [10, 1080],
+          [op.between]: [10, 10080],
         },
       },
     });
